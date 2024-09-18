@@ -1,8 +1,8 @@
 fe:
   name: tasks-fe
   metadata:
-    labels: { }
-    annotations: { }
+    labels: {}
+    annotations: {}
   ui_settings:
     app_title: "My Tasks"
   deployment:
@@ -14,6 +14,12 @@ fe:
     targetPort: 80
     protocol: TCP
     type: ClusterIP
+be:
+  name: tasks-be
+  metadata:
+    labels: {}
+    annotations: {}
+
 #----------------------------------------------------------------------------#
 #         below affinity will render nodeAffinity:                           #
 #          requiredDuringSchedulingIgnoredDuringExecution:                   #
@@ -25,6 +31,4 @@ fe:
 #                      {{- include "node.affinity" . | indent 22 }}          #
 #----------------------------------------------------------------------------#
 affinity:
-  nodeNames: # put the names of your desired nodes below
-    - node01
-    - node02
+  nodeNames: # put the names of your desired nodes below. example - node01

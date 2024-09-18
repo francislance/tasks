@@ -4,9 +4,9 @@ metadata:
   name: {{ .Values.fe.name }}
   labels:
     app: {{ .Values.fe.name }}
-    {{- include "chart.labels" . | indent 4 }}
+    {{- include "fe.labels" . | indent 4 }}
   annotations:
-    {{- include "chart.annotations" . | indent 4 }}
+    {{- include "fe.annotations" . | indent 4 }}
 spec:
   replicas: {{ .Values.fe.deployment.replicas }}
   selector:
