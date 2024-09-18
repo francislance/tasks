@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.fe.name }}
+  labels:
+    app: {{ .Values.fe.name }}
+    {{- include "chart.labels" . | indent 4 }}
+  annotations:
+    {{- include "chart.annotations" . | indent 4 }}
+spec:
+  replicas: {{ .Values.fe.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.fe.name }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.fe.name }}
+    spec:
+      {{- if .Values.affinity.nodeNames }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      {{- include "node.affinity" . | indent 22 }}
+      {{- end }}
+      containers:
+        - image: {{ .Values.fe.deployment.image }}:{{ .Values.fe.deployment.tag }}
+          name: {{ .Values.fe.name }}-container
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.fe.name }}

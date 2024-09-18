@@ -1,0 +1,30 @@
+fe:
+  name: tasks-fe
+  metadata:
+    labels: { }
+    annotations: { }
+  ui_settings:
+    app_title: "My Tasks"
+  deployment:
+    replicas: 1
+    image: "guidelance/tasks-fe"
+    tag: "0.0.2"
+  service:
+    port: 80
+    targetPort: 80
+    protocol: TCP
+    type: ClusterIP
+#----------------------------------------------------------------------------#
+#         below affinity will render nodeAffinity:                           #
+#          requiredDuringSchedulingIgnoredDuringExecution:                   #
+#            nodeSelectorTerms:                                              #
+#              - matchExpressions:                                           #
+#                 - key: kubernetes.io/hostname                              #
+#                    operator: In                                            #
+#                    values:                                                 #
+#                      {{- include "node.affinity" . | indent 22 }}          #
+#----------------------------------------------------------------------------#
+affinity:
+  nodeNames: # put the names of your desired nodes below
+    - node01
+    - node02

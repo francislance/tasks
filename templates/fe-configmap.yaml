@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  APP_TITLE: {{ .Values.fe.ui_settings.app_title | quote }}
+kind: ConfigMap
+metadata:
+  name: {{ .Values.fe.name }}
+  labels:
+    app: {{ .Values.fe.name }}
+    {{- include "chart.labels" . | indent 4 }}

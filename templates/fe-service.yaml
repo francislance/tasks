@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ .Values.fe.name }}
+    {{- include "chart.labels" . | indent 4 }}
+  name: {{ .Values.fe.name }}
+spec:
+  ports:
+    - name: {{ .Values.fe.name }}-ports
+      port: {{ .Values.fe.service.port }}
+      protocol: {{ .Values.fe.service.protocol }}
+      targetPort: {{ .Values.fe.service.targetPort }}
+  selector:
+    app: {{ .Values.fe.name }}
+  type: {{ .Values.fe.service.type }}
