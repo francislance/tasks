@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks Helm Chart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+<h1>Welcome to the Tasks Helm Chart Repository</h1>
+<p>This repository contains the Helm chart for deploying both frontend (ReactJS) and backend (Kotlin) applications of the <strong>tasks</strong> project.</p>
+
+<h2>Using the Helm Chart</h2>
+<p>
+    To add this Helm repository to your local Helm client, use the following command:
+</p>
+<pre><code>helm repo add tasks https://francislance.github.io/tasks</code></pre>
+
+<p>Once added, you can install the chart by running:</p>
+<pre><code>helm install my-tasks tasks/tasks</code></pre>
+
+<h2>Available Values</h2>
+<p>You can override the default values in the chart by providing your own <code>values.yaml</code> file. Some common overrides include:</p>
+<ul>
+    <li><code>frontend.replicas</code>: Number of frontend replicas.</li>
+    <li><code>backend.replicas</code>: Number of backend replicas.</li>
+    <li><code>frontend.image.repository</code>: Docker image for frontend.</li>
+    <li><code>backend.image.repository</code>: Docker image for backend.</li>
+</ul>
+
+<h2>Contributing</h2>
+<p>Feel free to submit pull requests or report issues if you encounter any bugs or have suggestions for improvement.</p>
+</body>
+</html>
