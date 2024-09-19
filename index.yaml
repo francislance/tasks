@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  tasks:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2024-09-19T16:45:35.469188+07:00"
+    description: Tasks Helm Chart
+    digest: 1868e224dda8ec8b6628aef07ea98d4d6cc55cd5506b7f2e4f28ac01fedab22e
+    name: tasks
+    type: application
+    urls:
+    - https://francislance.github.io/tasks-chart/tasks-0.0.1.tgz
+    version: 0.0.1
+generated: "2024-09-19T16:45:35.467423+07:00"
