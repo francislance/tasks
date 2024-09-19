@@ -1,0 +1,42 @@
+{{- if eq .Values.ingressType "nginx" }}
+{{- if .Values.nginx.rules.hosts }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.nginx.className }}
+  name: {{ .Release.Name }}
+spec:
+  ingressClassName: {{ .Values.nginx.className }}
+  {{- if .Values.nginx.tls.secretName }}
+  tls:
+    - hosts:
+    {{- range .Values.nginx.rules.hosts }}
+      - {{ . }}
+    {{- end }}
+      {{- if .Values.nginx.tls.secretName }}
+      secretName: {{ .Values.nginx.tls.secretName }}
+      {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.nginx.rules.hosts }}
+    - host: {{ . }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: {{ $.Values.fe.name }}
+                port:
+                  number: {{ $.Values.fe.service.port }}
+            path: /
+            pathType: Prefix
+          - backend:
+              service:
+                name: {{ $.Values.be.name }}
+                port:
+                  number: {{ $.Values.be.service.port }}
+            path: /tasks
+            pathType: Prefix
+    {{- end }}
+{{- end }}
+{{- end }}

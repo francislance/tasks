@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.be.name }}
+  name: {{ .Values.be.name }}
+spec:
+  replicas: {{ .Values.be.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.be.name }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.be.name }}
+    spec:
+      {{- if .Values.affinity.nodeNames }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: openebs.io/nodename
+                    operator: In
+                    values:
+                    {{- include "node.affinity" . | indent 22 }}
+      {{- end }}
+      containers:
+        - image: {{ .Values.be.deployment.image }}:{{ .Values.be.deployment.tag }}
+          name: {{ .Values.be.name }}-container
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.be.name }}
+            - secretRef:
+                name: {{ .Values.be.name }}

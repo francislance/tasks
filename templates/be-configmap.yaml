@@ -1,0 +1,13 @@
+{{- if .Values.be.java_settings }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.be.name }}
+  labels:
+    app: {{ .Values.be.name }}
+    {{- include "be.labels" . | indent 4 }}
+data:
+  {{- range $key, $value := .Values.be.java_settings }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}

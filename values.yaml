@@ -1,10 +1,15 @@
+app:
+  name: tasks
+#----------------------------------------------------------------------------#
+#                     Start of tasks-fe configurations                       #
+#----------------------------------------------------------------------------#
 fe:
   name: tasks-fe
   metadata:
     labels: {}
     annotations: {}
   ui_settings:
-    app_title: "My Tasks"
+    APP_TITLE: "My Tasks"
   deployment:
     replicas: 1
     image: "guidelance/tasks-fe"
@@ -14,11 +19,34 @@ fe:
     targetPort: 80
     protocol: TCP
     type: ClusterIP
+
+
+#----------------------------------------------------------------------------#
+#                     Start of tasks-be configurations                       #
+#----------------------------------------------------------------------------#
 be:
   name: tasks-be
   metadata:
     labels: {}
     annotations: {}
+  java_settings:
+    SPRING_APPLICATION_NAME: "tasks-be"
+    SPRING_DEVTOOLS_RESTART_ENABLED: "true"
+    SPRING_DEVTOOLS_LIVERELOAD_ENABLED: "true"
+    SERVER_PORT: "8080"
+    LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB: "DEBUG"
+    LOGGING_LEVEL_COM_TASK: "DEBUG"
+  java_secrets:
+    SPRING_DATA_MONGODB_URI: "mongodb://mongodb:27017/tasks"
+  deployment:
+    replicas: 1
+    image: "guidelance/tasks-be"
+    tag: "0.0.1"
+  service:
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+    type: ClusterIP
 
 #----------------------------------------------------------------------------#
 #         below affinity will render nodeAffinity:                           #
@@ -32,3 +60,29 @@ be:
 #----------------------------------------------------------------------------#
 affinity:
   nodeNames: # put the names of your desired nodes below. example - node01
+    - node1
+
+#----------------------------------------------------------------------------#
+#                Current accepted types are nginx, istio                     #
+#----------------------------------------------------------------------------#
+ingressType: istio
+
+nginx:
+  className: nginx
+  tls:
+    secretName: tls1
+  rules:
+    hosts: # note that if no host is provided, ingress resource will totally be ignored
+
+istio:
+  ingressNameSpace: istio-ingress
+  tls:
+    secretName:
+  selectors:
+    app: istio-ingress
+    istio: ingress
+  servers:
+    portNumber: 80
+    protocol: HTTP
+    hosts: # note that if no host is provided, ingress resource will totally be ignored
+

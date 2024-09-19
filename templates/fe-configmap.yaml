@@ -1,9 +1,13 @@
+{{- if .Values.fe.ui_settings }}
 apiVersion: v1
-data:
-  APP_TITLE: {{ .Values.fe.ui_settings.app_title | quote }}
 kind: ConfigMap
 metadata:
   name: {{ .Values.fe.name }}
   labels:
     app: {{ .Values.fe.name }}
     {{- include "fe.labels" . | indent 4 }}
+data:
+  {{- range $key, $value := .Values.fe.ui_settings }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}

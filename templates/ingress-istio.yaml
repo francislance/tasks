@@ -1,0 +1,65 @@
+{{- if eq .Values.ingressType "istio" }}
+{{- if .Values.istio.servers.hosts }}
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: {{ .Values.app.name }}-istio
+  namespace: {{ .Values.istio.ingressNameSpace }}
+spec:
+  selector:
+  {{- range $key, $value := .Values.istio.selectors }}
+    {{ $key }}: {{ $value }}
+  {{- end }}
+  servers:
+    - port:
+        number: {{ .Values.istio.servers.portNumber }}
+        name: {{ .Values.app.name }}-port
+        protocol: {{ .Values.istio.servers.protocol }}
+      hosts:
+      {{- range .Values.istio.servers.hosts }}
+      - {{ . }}
+      {{- end }}
+    {{- if .Values.istio.tls.secretName }}
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+      {{- range .Values.istio.servers.hosts }}
+      - {{ . }}
+      {{- end }}
+      tls:
+        mode: SIMPLE
+        credentialName: {{ .Values.istio.tls.secretName }}
+    {{- end }}
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ .Values.app.name }}-istio
+spec:
+  hosts:
+  {{- range .Values.istio.servers.hosts }}
+  - {{ . }}
+  {{- end }}
+  gateways:
+    - {{ .Values.istio.ingressNameSpace }}/{{ .Values.app.name }}-istio
+  http:
+    - match:
+        - uri:
+            prefix: "/tasks"
+      route:
+        - destination:
+            host: {{ .Values.be.name }}
+            port:
+              number: {{ .Values.be.service.port }}
+    - match:
+        - uri:
+            prefix: "/"
+      route:
+        - destination:
+            host: {{ .Values.fe.name }}
+            port:
+              number: {{ .Values.fe.service.port }}
+{{- end }}
+{{- end }}
